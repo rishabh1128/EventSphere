@@ -5,7 +5,7 @@ export const eventFormSchema = z.object({
   description: z
     .string()
     .min(3, "Description must be atleast 3 characters")
-    .max(400, "Description must be atmost 400 characters."),
+    .max(1000, "Description must be atmost 1000 characters."),
   location: z
     .string()
     .min(3, "Location must be atleast 3 characters.")

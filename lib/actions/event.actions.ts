@@ -26,7 +26,7 @@ const populateEvent = (query: any) => {
     .populate({
       path: "organizer",
       model: User,
-      select: "_id firstName lastName",
+      select: "_id firstName lastName username",
     })
     .populate({ path: "category", model: Category, select: "_id name" });
 };
@@ -74,6 +74,8 @@ export async function updateEvent({ userId, event, path }: UpdateEventParams) {
 
     const eventToUpdate = await Event.findById(event._id);
     if (!eventToUpdate || eventToUpdate.organizer.toHexString() !== userId) {
+      // console.log(userId);
+      // console.log(eventToUpdate.organizer.toHexString());
       throw new Error("Unauthorized or event not found");
     }
 
