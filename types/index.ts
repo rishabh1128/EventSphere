@@ -125,6 +125,11 @@ export type CheckOrderedParams = {
   userId: string;
 };
 
+export type CheckOrganizerParams = {
+  eventId: string;
+  userId: string;
+};
+
 export type GetOrdersByEventParams = {
   eventId: string;
   searchString: string;

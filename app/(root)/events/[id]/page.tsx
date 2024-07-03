@@ -25,7 +25,7 @@ const EventDetails = async ({
     page: searchParams.page as string,
   });
   const isOrdered = userId
-    ? await checkIfAlreadyOrdered({ eventId: id, userId })
+    ? ((await checkIfAlreadyOrdered({ eventId: id, userId })) as boolean)
     : false;
   //   console.log(event);
   return (
@@ -62,7 +62,7 @@ const EventDetails = async ({
             </div>
 
             {/* Checkout button */}
-            <CheckoutButton event={event} isOrdered={isOrdered || false} />
+            <CheckoutButton event={event} isOrdered={isOrdered} />
 
             <div className="flex flex-col gap-5">
               <div className="flex gap-2 md:gap-3">

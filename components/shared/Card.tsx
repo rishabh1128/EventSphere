@@ -33,7 +33,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
               height={20}
             />
           </Link>
-          <DeleteConfirmation eventId={event._id} />
+          <DeleteConfirmation eventId={event._id} type="Card" />
         </div>
       )}
       <div className="flex min-h-[230px] flex-col gap-3 p-5 md:gap-4">

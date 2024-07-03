@@ -15,6 +15,7 @@ import {
   GetAllEventsParams,
   GetEventsByUserParams,
   GetRelatedEventsByCategoryParams,
+  CheckOrganizerParams,
 } from "@/types";
 
 const getCategoryByName = async (name: string) => {

@@ -5,6 +5,7 @@ import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Checkout from "./Checkout";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 const CheckoutButton = ({
   event,
@@ -16,7 +17,16 @@ const CheckoutButton = ({
   const hasEventFinished = new Date(event.endDateTime) < new Date();
   const { user } = useUser();
   const userId = user?.publicMetadata.userId as string;
-  return (
+  const isOrganizer = userId === event.organizer._id.toString();
+
+  return isOrganizer ? (
+    <div className="flex items-center gap-3">
+      <Button asChild className="button rounded-full" size="lg">
+        <Link href={`/events/${event._id}/update`}>Update Event</Link>
+      </Button>
+      <DeleteConfirmation eventId={event._id} type="Button" />
+    </div>
+  ) : (
     <div className="flex items-center gap-3">
       {hasEventFinished ? (
         <p className="p-2 text-red-400">

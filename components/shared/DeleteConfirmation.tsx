@@ -17,20 +17,34 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { deleteEvent } from "@/lib/actions/event.actions";
+import { Button } from "../ui/button";
 
-const DeleteConfirmation = ({ eventId }: { eventId: string }) => {
+const DeleteConfirmation = ({
+  eventId,
+  type,
+}: {
+  eventId: string;
+  type: "Card" | "Button";
+}) => {
   const pathname = usePathname();
   let [isPending, startTransition] = useTransition();
 
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <Image
-          src="/assets/icons/delete.svg"
-          alt="edit"
-          width={20}
-          height={20}
-        />
+        {type === "Card" && (
+          <Image
+            src="/assets/icons/delete.svg"
+            alt="edit"
+            width={20}
+            height={20}
+          />
+        )}
+        {type === "Button" && (
+          <Button className="button" variant="destructive" size="lg">
+            Delete Event
+          </Button>
+        )}
       </AlertDialogTrigger>
 
       <AlertDialogContent className="bg-white">
