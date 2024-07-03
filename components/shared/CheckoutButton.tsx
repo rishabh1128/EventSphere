@@ -6,7 +6,13 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import Checkout from "./Checkout";
 
-const CheckoutButton = ({ event }: { event: IEvent }) => {
+const CheckoutButton = ({
+  event,
+  isOrdered,
+}: {
+  event: IEvent;
+  isOrdered: boolean;
+}) => {
   const hasEventFinished = new Date(event.endDateTime) < new Date();
   const { user } = useUser();
   const userId = user?.publicMetadata.userId as string;
@@ -26,7 +32,11 @@ const CheckoutButton = ({ event }: { event: IEvent }) => {
             </Button>
           </SignedOut>
           <SignedIn>
-            <Checkout event={event} userId={userId} />
+            {isOrdered ? (
+              <p className="p-2 text-green-500"> Already purchased!</p>
+            ) : (
+              <Checkout event={event} userId={userId} />
+            )}
           </SignedIn>
         </>
       )}

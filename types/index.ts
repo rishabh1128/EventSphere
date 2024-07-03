@@ -120,6 +120,11 @@ export type CreateOrderParams = {
   createdAt: Date;
 };
 
+export type CheckOrderedParams = {
+  eventId: string;
+  userId: string;
+};
+
 export type GetOrdersByEventParams = {
   eventId: string;
   searchString: string;

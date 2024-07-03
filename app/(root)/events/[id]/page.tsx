@@ -4,8 +4,10 @@ import {
   getEventById,
   getRelatedEventsByCategory,
 } from "@/lib/actions/event.actions";
+import { checkIfAlreadyOrdered } from "@/lib/actions/order.actions";
 import { formatDateTime } from "@/lib/utils";
 import { SearchParamProps } from "@/types";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,12 +15,18 @@ const EventDetails = async ({
   params: { id },
   searchParams,
 }: SearchParamProps) => {
+  const { sessionClaims } = auth();
+  const userId = sessionClaims?.userId as string;
+
   const event = await getEventById(id);
   const relatedEvents = await getRelatedEventsByCategory({
     categoryId: event.category._id,
     eventId: event._id,
     page: searchParams.page as string,
   });
+  const isOrdered = userId
+    ? await checkIfAlreadyOrdered({ eventId: id, userId })
+    : false;
   //   console.log(event);
   return (
     <>
@@ -54,7 +62,7 @@ const EventDetails = async ({
             </div>
 
             {/* Checkout button */}
-            <CheckoutButton event={event} />
+            <CheckoutButton event={event} isOrdered={isOrdered || false} />
 
             <div className="flex flex-col gap-5">
               <div className="flex gap-2 md:gap-3">
