@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 
 import {
@@ -27,6 +27,7 @@ const DeleteConfirmation = ({
   type: "Card" | "Button";
 }) => {
   const pathname = usePathname();
+  const router = useRouter();
   let [isPending, startTransition] = useTransition();
 
   return (
@@ -62,6 +63,7 @@ const DeleteConfirmation = ({
             onClick={() =>
               startTransition(async () => {
                 await deleteEvent({ eventId, path: pathname });
+                if (type === "Button") router.push("/");
               })
             }
           >

@@ -17,12 +17,12 @@ const EventDetails = async ({
 }: SearchParamProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
-
+  const page = Number(searchParams?.page) || 1;
   const event = await getEventById(id);
   const relatedEvents = await getRelatedEventsByCategory({
     categoryId: event.category._id,
     eventId: event._id,
-    page: searchParams.page as string,
+    page: page,
   });
   const isOrdered = userId
     ? ((await checkIfAlreadyOrdered({ eventId: id, userId })) as boolean)
@@ -120,7 +120,7 @@ const EventDetails = async ({
           emptyStateSubtext="Check back in later!"
           collectionType="All_Events"
           limit={3}
-          page={searchParams.page as string}
+          page={page}
           totalPages={relatedEvents?.totalPages}
         />
       </section>
