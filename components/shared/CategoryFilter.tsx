@@ -46,7 +46,10 @@ const CategoryFilter = () => {
   };
 
   return (
-    <Select onValueChange={(value: string) => onSelectCategory(value)}>
+    <Select
+      onValueChange={(value: string) => onSelectCategory(value)}
+      defaultValue="All"
+    >
       <SelectTrigger className="select-field">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
