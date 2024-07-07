@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import Checkout from "./Checkout";
 import DeleteConfirmation from "./DeleteConfirmation";
+import Image from "next/image";
 
 const CheckoutButton = ({
   event,
@@ -20,11 +21,20 @@ const CheckoutButton = ({
   const isOrganizer = userId === event.organizer._id.toString();
 
   return isOrganizer ? (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-4">
       <Button asChild className="button rounded-full" size="lg">
         <Link href={`/events/${event._id}/update`}>Update Event</Link>
       </Button>
       <DeleteConfirmation eventId={event._id} type="Button" />
+      <Button
+        asChild
+        className="button bg-green-500 hover:bg-green-400"
+        size="lg"
+      >
+        <Link href={`/orders?eventId=${event._id}`} className="flex gap-2">
+          <p>Order Details</p>
+        </Link>
+      </Button>
     </div>
   ) : (
     <div className="flex items-center gap-3">
