@@ -21,7 +21,7 @@ const CheckoutButton = ({
   const isOrganizer = userId === event.organizer._id.toString();
 
   return isOrganizer ? (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col sm:flex-row items-start md:items-center gap-4">
       <Button asChild className="button rounded-full" size="lg">
         <Link href={`/events/${event._id}/update`}>Update Event</Link>
       </Button>
