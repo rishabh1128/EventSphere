@@ -25,7 +25,7 @@ const CheckoutButton = ({
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
     const query = new URLSearchParams(window.location.search);
-    if (query.get("success")) {
+    if (query.get("success") && order) {
       console.log("Order placed! You will receive an email confirmation.");
       const sendMail = async () => {
         const res = await fetch("/api/sendEmail", {
