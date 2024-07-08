@@ -7,7 +7,9 @@ import Link from "next/link";
 import Checkout from "./Checkout";
 import DeleteConfirmation from "./DeleteConfirmation";
 import { useEffect } from "react";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime, removeKeysFromQuery } from "@/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
+import qs from "query-string";
 
 const CheckoutButton = ({
   event,
@@ -20,12 +22,15 @@ const CheckoutButton = ({
 }) => {
   const hasEventFinished = new Date(event.endDateTime) < new Date();
   const { user } = useUser();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentUrl = qs.parse(searchParams.toString());
   const userId = user?.publicMetadata.userId as string;
   const isOrganizer = userId === event.organizer._id.toString();
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
-    const query = new URLSearchParams(window.location.search);
-    if (query.get("success") && order) {
+
+    if (currentUrl["success"] && order) {
       console.log("Order placed! You will receive an email confirmation.");
       const sendMail = async () => {
         const res = await fetch("/api/sendEmail", {
@@ -42,14 +47,24 @@ const CheckoutButton = ({
             endDateTime: formatDateTime(event.endDateTime).dateTime,
           }),
         });
-        console.log(res);
+        // console.log(res);
+        const newUrl = removeKeysFromQuery({
+          params: searchParams.toString(),
+          keysToRemove: ["success"],
+        });
+        router.push(newUrl, { scroll: false });
       };
       sendMail();
     }
-    if (query.get("canceled")) {
+    if (currentUrl["canceled"]) {
       console.log(
         "Order canceled -- continue to shop around and checkout when you’re ready."
       );
+      const newUrl = removeKeysFromQuery({
+        params: searchParams.toString(),
+        keysToRemove: ["canceled"],
+      });
+      router.push(newUrl, { scroll: false });
     }
   }, []);
 
