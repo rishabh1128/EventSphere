@@ -5,6 +5,7 @@ import {
   getRelatedEventsByCategory,
 } from "@/lib/actions/event.actions";
 import { checkIfAlreadyOrdered } from "@/lib/actions/order.actions";
+import { getUserById } from "@/lib/actions/user.actions";
 import { formatDateTime, formatPrice } from "@/lib/utils";
 import { SearchParamProps } from "@/types";
 import { auth } from "@clerk/nextjs";
@@ -24,10 +25,11 @@ const EventDetails = async ({
     eventId: event._id,
     page: page,
   });
-  const isOrdered = userId
-    ? ((await checkIfAlreadyOrdered({ eventId: id, userId })) as boolean)
-    : false;
+  const order = await checkIfAlreadyOrdered({ eventId: id, userId });
+  const userObject = await getUserById(userId);
+
   //   console.log(event);
+
   return (
     <>
       <section className="flex justify-center bg-primary-50 bg-dotted-pattern bg-contain mt-6">
@@ -61,7 +63,11 @@ const EventDetails = async ({
             </div>
 
             {/* Checkout button */}
-            <CheckoutButton event={event} isOrdered={isOrdered} />
+            <CheckoutButton
+              event={event}
+              order={order}
+              email={userObject.email}
+            />
 
             <div className="flex flex-col gap-5">
               <div className="flex gap-2 md:gap-3">

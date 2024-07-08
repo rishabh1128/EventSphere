@@ -26,7 +26,7 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency: "inr",
             unit_amount: price,
             product_data: {
               name: order.eventTitle,
@@ -40,8 +40,8 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
         buyerId: order.buyerId,
       },
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
+      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/events/${order.eventId}?success=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/events/${order.eventId}?canceled=true`,
     });
 
     redirect(session.url!);
@@ -176,8 +176,11 @@ export async function checkIfAlreadyOrdered({
 }: CheckOrderedParams) {
   try {
     await connectToDatabase();
-    const orders = await Order.exists({ buyer: userId, event: eventId });
-    return orders != null;
+    const orders = await Order.exists({
+      buyer: userId,
+      event: eventId,
+    });
+    return orders?._id.toString();
   } catch (error) {
     handleError(error);
   }

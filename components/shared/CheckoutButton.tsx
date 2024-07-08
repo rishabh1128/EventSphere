@@ -6,19 +6,52 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import Checkout from "./Checkout";
 import DeleteConfirmation from "./DeleteConfirmation";
-import Image from "next/image";
+import { useEffect } from "react";
+import { formatDateTime } from "@/lib/utils";
 
 const CheckoutButton = ({
   event,
-  isOrdered,
+  order,
+  email,
 }: {
   event: IEvent;
-  isOrdered: boolean;
+  order?: string;
+  email?: string;
 }) => {
   const hasEventFinished = new Date(event.endDateTime) < new Date();
   const { user } = useUser();
   const userId = user?.publicMetadata.userId as string;
   const isOrganizer = userId === event.organizer._id.toString();
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("success")) {
+      console.log("Order placed! You will receive an email confirmation.");
+      const sendMail = async () => {
+        const res = await fetch("/api/sendEmail", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            eventName: event.title,
+            ticketId: order,
+            cost: event.price,
+            startDateTime: formatDateTime(event.startDateTime).dateTime,
+            endDateTime: formatDateTime(event.endDateTime).dateTime,
+          }),
+        });
+        console.log(res);
+      };
+      sendMail();
+    }
+    if (query.get("canceled")) {
+      console.log(
+        "Order canceled -- continue to shop around and checkout when you’re ready."
+      );
+    }
+  }, []);
 
   return isOrganizer ? (
     <div className="flex flex-col sm:flex-row items-start md:items-center gap-4">
@@ -52,7 +85,7 @@ const CheckoutButton = ({
             </Button>
           </SignedOut>
           <SignedIn>
-            {isOrdered ? (
+            {order ? (
               <p className="p-2 text-green-500"> Already purchased!</p>
             ) : (
               <Checkout event={event} userId={userId} />
