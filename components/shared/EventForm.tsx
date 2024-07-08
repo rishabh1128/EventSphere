@@ -29,6 +29,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { useRouter } from "next/navigation";
 import { createEvent, updateEvent } from "@/lib/actions/event.actions";
 import { IEvent } from "@/lib/database/models/event.model";
+import toast from "react-hot-toast";
 
 type EventFormProps = {
   userId: string;
@@ -77,9 +78,10 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
         if (newEvent) {
           form.reset();
           router.push(`/events/${newEvent._id}`);
+          toast.success("Event created successfully!");
         }
       } catch (error) {
-        console.log(error);
+        toast.error("Event Creation failed!");
       }
     }
 
@@ -97,9 +99,11 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
         if (updatedEvent) {
           form.reset();
           router.push(`/events/${updatedEvent._id}`);
+          toast.success("Event updated successfully!");
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        toast.error("Event updation failed!");
       }
     }
   }

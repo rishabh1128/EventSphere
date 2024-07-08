@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { formatDateTime, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
+import toast from "react-hot-toast";
 
 const CheckoutButton = ({
   event,
@@ -31,7 +32,7 @@ const CheckoutButton = ({
     // Check to see if this is a redirect back from Checkout
 
     if (currentUrl["success"] && order) {
-      console.log("Order placed! You will receive an email confirmation.");
+      toast.success("Order placed! You will receive an email confirmation.");
       const sendMail = async () => {
         const res = await fetch("/api/sendEmail", {
           method: "POST",
@@ -57,7 +58,7 @@ const CheckoutButton = ({
       sendMail();
     }
     if (currentUrl["canceled"]) {
-      console.log(
+      toast.error(
         "Order canceled -- continue to shop around and checkout when you’re ready."
       );
       const newUrl = removeKeysFromQuery({

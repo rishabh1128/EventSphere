@@ -18,6 +18,7 @@ import {
 
 import { deleteEvent } from "@/lib/actions/event.actions";
 import { Button } from "../ui/button";
+import toast from "react-hot-toast";
 
 const DeleteConfirmation = ({
   eventId,
@@ -62,8 +63,13 @@ const DeleteConfirmation = ({
           <AlertDialogAction
             onClick={() =>
               startTransition(async () => {
-                await deleteEvent({ eventId, path: pathname });
-                if (type === "Button") router.push("/");
+                try {
+                  await deleteEvent({ eventId, path: pathname });
+                  if (type === "Button") router.push("/");
+                  toast.success("Event deleted successfully!");
+                } catch (error) {
+                  toast.error("Event deletion failed!");
+                }
               })
             }
           >
