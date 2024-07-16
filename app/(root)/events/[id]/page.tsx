@@ -26,7 +26,7 @@ const EventDetails = async ({
     page: page,
   });
   const order = await checkIfAlreadyOrdered({ eventId: id, userId });
-  const userObject = await getUserById(userId);
+  const userObject = userId ? await getUserById(userId) : null;
 
   //   console.log(event);
 
@@ -66,7 +66,7 @@ const EventDetails = async ({
             <CheckoutButton
               event={event}
               order={order}
-              email={userObject.email}
+              email={userObject?.email}
             />
 
             <div className="flex flex-col gap-5">
